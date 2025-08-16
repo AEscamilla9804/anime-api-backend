@@ -12,19 +12,21 @@ dotenv.config();
 connectDB();
 
 // CORS allowed domains
-const allowedDomains = [process.env.FRONTEND_URL];
+const allowedDomains = [
+  'https://aniverse-explorer.netlify.app',
+  'http://localhost:5173' // dev
+];
 
-// CORS config
 const corsOptions = {
-    origin: function(origin, callback) {
-        if (allowedDomains.indexOf(origin) !== -1) {
-            // Request origin allowed
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS policy'));
-        }
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, same server)
+    if (!origin || allowedDomains.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS policy'));
     }
-}
+  }
+};
 
 app.use(cors(corsOptions));
 app.use(express.json());
